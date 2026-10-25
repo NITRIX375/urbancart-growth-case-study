@@ -2,11 +2,11 @@
 
 ## A. Automate the pipeline
 
-**Landing and warehouse.** On GCP (GA4 exports to BigQuery natively), each source lands raw and immutable in Cloud Storage, then loads as-is into BigQuery `raw_*` datasets, the warehouse Looker Studio reads directly. GA4 uses its native export; the rest use Airbyte connectors, or a Cloud Run extractor where none exists.
+**Landing and warehouse.** On GCP (GA4 exports to BigQuery natively), each source lands raw and immutable in Cloud Storage, then loads as-is into BigQuery `raw_*` datasets, the warehouse Looker Studio reads directly. GA4 uses its native export; the rest use Airbyte connectors or a Cloud Run extractor.
 
-**Daily job.** A Cloud Composer (Airflow) DAG runs at 02:00 IST: extract → load raw → dbt staging → marts → tests → publish. Staging types, de-duplicates on `order_id` and flags internal and unknown-channel users; marts hold `dim_customer`, `fct_orders`, `fct_spend` and `channel_metrics_monthly`, the Part 1 metrics.
+**Daily job.** A Cloud Composer (Airflow) DAG runs at 02:00 IST: extract → load raw → dbt staging → marts → tests → publish. Staging types, de-duplicates on `order_id` and flags internal and unknown-channel users; marts hold `dim_customer`, `fct_orders`, `fct_spend` and `channel_metrics_monthly`.
 
-**Data-quality tests.** Each Part 1 finding is a dbt test: `unique(order_id)`; `not_null(acquisition_channel)`; exclusion of `@urbancart.in` and a test-account list; `order_date >= signup_date`; `accepted_values(status)`; spend complete per channel × month; source freshness. Critical failures stop the DAG before marts refresh; soft failures quarantine rows and alert.
+**Data-quality tests.** Each Part 1 finding is a dbt test: `unique(order_id)`; `not_null(acquisition_channel)`; exclusion of `@urbancart.in` and a test-account list; `order_date >= signup_date`; `accepted_values(status)`; spend complete per channel × month; source freshness. Critical failures stop the DAG; soft failures quarantine rows and alert.
 
 **Secrets and failure.** Credentials live in Secret Manager, read by least-privilege service accounts; nothing in code. Failures post to Slack with the log link, a freshness alert fires if marts are over 26 hours old, and the dashboard shows a "data as of" badge so stale data is never silent.
 
@@ -18,6 +18,8 @@
 
 **Why it cannot invent numbers.** The model never writes free SQL or does arithmetic; it only picks a template and fills parameters. A checker rejects any reply with a number absent from the query result. Ambiguous or out-of-scope questions get a clarifying question, not a guess. Everything is logged.
 
-**Testing.** Forty golden questions with answers known from Part 1 ("Meta CAC in March" → ₹789) must match 95% exactly on every prompt or model change; dbt unit tests per template; two weeks of shadow use reviewed by the data team; then UAT with the CMO.
+**Testing.** Forty golden questions with answers known from Part 1 ("Meta CAC in March" → ₹789) must match 95% exactly on every prompt or model change; dbt unit tests per template; two weeks of shadow use; then UAT with the CMO.
+
+A working prototype of this agent, with its golden tests, is in `Part3_Prototype/`.
 
 ![Architecture](architecture.png)
