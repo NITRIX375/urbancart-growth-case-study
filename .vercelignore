@@ -1,0 +1,11 @@
+.git
+.env
+*.pdf
+*.ipynb
+tools/
+Part1_Analysis/results/
+Part1_Analysis/charts/
+Part2_Memo/
+Part3_Design/
+Part3_Prototype/ui.png
+__pycache__/

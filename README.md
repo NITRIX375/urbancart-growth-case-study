@@ -2,6 +2,8 @@
 
 Take-home case study for the Data & AI Engineer (Growth & Analytics) role. Everything here is reproducible from the raw CSVs with one command.
 
+**Live dashboard + self-serve agent:** https://urbancart-growth-case-study.vercel.app (Part 3 prototype, deployed as one Python serverless function).
+
 ## The answer in 30 seconds
 
 **Cut Affiliate to zero and trim Meta; protect Google and hold Influencer.** Paid spend falls from ₹8.68L to ₹6.94L a quarter (−20%).
@@ -30,13 +32,14 @@ Three things in the raw data change the answer if missed: 206 duplicate order ro
 | `AI_Use_Note.md` | Which AI tools were used, for what, and what they got wrong |
 | `Reflection.md` | Answer to the final-step question |
 | `src/` | `queries.py` (SQL), `analysis.py` (engine), `report.py` (Markdown), `charts.py`, `recommendation.py` |
+| `api/index.py`, `vercel.json`, `public/` | Vercel deployment of the dashboard + agent (one Python serverless function; charts served statically) |
 | `tools/` | `diagram.py` (architecture figure), `build_notebook.py`, `md2pdf.py` (Markdown → PDF via pandoc + headless Chrome) |
 | `data/raw/` | The three CSVs exactly as received |
 
 ## Reproduce
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt   # runtime deps are just duckdb + pandas (requirements.txt)
 python run_analysis.py        # regenerates Part 1 tables, queries.sql, results/ and all charts; asserts internal consistency
 python Part3_Prototype/app.py --serve            # dashboard + self-serve agent at http://localhost:8765 (see Part3_Prototype/README.md)
 python -m unittest Part3_Prototype.test_golden   # golden-question tests for the agent

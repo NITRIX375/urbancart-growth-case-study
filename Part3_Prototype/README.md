@@ -1,5 +1,7 @@
 # Part 3 prototype: dashboard + self-serve agent, working
 
+**Live:** https://urbancart-growth-case-study.vercel.app · deployed from `api/index.py` + `vercel.json` (one Python serverless function; charts served from `public/`).
+
 A small, runnable version of the self-serve layer described in `Part3_Design/Part3_Design_Note.md`: one local page with
 live KPI tiles and a channel scorecard (computed from the same DuckDB clean layer the agent queries), the Part 1/2 charts,
 an ask box backed by the conversational agent, a flow chart of how a question becomes an answer, live data-quality

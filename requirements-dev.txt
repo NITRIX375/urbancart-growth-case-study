@@ -1,0 +1,5 @@
+-r requirements.txt
+matplotlib>=3.8     # charts (run_analysis.py, tools/diagram.py)
+nbformat>=5.0       # tools/build_notebook.py
+nbconvert>=7.0
+ipykernel>=6.0

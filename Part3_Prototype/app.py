@@ -170,8 +170,15 @@ def make_handler(engine: Engine):
             self.send_response(code); self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(body))); self.end_headers(); self.wfile.write(body)
 
+        def _route(self) -> str:
+            # Locally the path is the route. On Vercel every request is rewritten to /api/index?route=...
+            # (see vercel.json), so the route travels explicitly in the query string.
+            path, _, query = self.path.partition("?")
+            route = dict(p.split("=", 1) for p in query.split("&") if "=" in p).get("route")
+            return {"home": "/", "ask": "/ask", "summary": "/api/summary"}.get(route, path)
+
         def do_GET(self):
-            path = self.path.split("?")[0]
+            path = self._route()
             if path == "/":
                 return self._send(page.encode(), "text/html; charset=utf-8")
             if path == "/api/summary":
@@ -181,6 +188,8 @@ def make_handler(engine: Engine):
             self._send(b"not found", "text/plain", 404)
 
         def do_POST(self):
+            if self._route() not in ("/ask", "/", "/api/index"):
+                return self._send(b"not found", "text/plain", 404)
             n = int(self.headers.get("Content-Length", 0))
             try:
                 question = json.loads(self.rfile.read(n) or b"{}").get("question", "")

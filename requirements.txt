@@ -1,7 +1,2 @@
 duckdb>=1.0
 pandas>=2.0
-matplotlib>=3.8
-# optional, only to re-execute the notebook:
-nbformat>=5.0
-nbconvert>=7.0
-ipykernel>=6.0
