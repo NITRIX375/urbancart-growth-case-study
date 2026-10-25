@@ -26,7 +26,7 @@ Three things in the raw data change the answer if missed: 206 duplicate order ro
 | `Part1_Analysis/results/` | Unrounded result tables as CSV |
 | `Part2_Memo/Part2_Memo.md` / `.pdf` | 250-word memo to the CMO with three charts (`charts/`) |
 | `Part3_Design/Part3_Design_Note.md` / `.pdf` | Pipeline + self-serve design note with `architecture.png` |
-| `Part3_Prototype/` | Working prototype of the self-serve agent: CLI + local web UI, metric registry, Gemini or rule-based parsing, number checker, golden tests |
+| `Part3_Prototype/` | Working prototype of the self-serve layer: local dashboard (live KPI tiles, scorecard, charts, flow chart, data-quality status) with an ask box backed by the agent; metric registry, Gemini or rule-based parsing, number checker, golden tests |
 | `AI_Use_Note.md` | Which AI tools were used, for what, and what they got wrong |
 | `Reflection.md` | Answer to the final-step question |
 | `src/` | `queries.py` (SQL), `analysis.py` (engine), `report.py` (Markdown), `charts.py`, `recommendation.py` |
@@ -38,7 +38,7 @@ Three things in the raw data change the answer if missed: 206 duplicate order ro
 ```bash
 pip install -r requirements.txt
 python run_analysis.py        # regenerates Part 1 tables, queries.sql, results/ and all charts; asserts internal consistency
-python Part3_Prototype/app.py --serve            # self-serve agent UI at http://localhost:8765 (see Part3_Prototype/README.md)
+python Part3_Prototype/app.py --serve            # dashboard + self-serve agent at http://localhost:8765 (see Part3_Prototype/README.md)
 python -m unittest Part3_Prototype.test_golden   # golden-question tests for the agent
 ```
 
